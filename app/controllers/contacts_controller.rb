@@ -2,13 +2,14 @@ class ContactsController < ApplicationController
   before_action :find_contact, only: [:edit, :update, :destroy]
 
   def index
-    session[:selected_group_id] = params[:group_id]
-    if params[:group_id] && !params[:group_id].empty?
-      @contacts = Group.find(params[:group_id]).contacts.order(created_at: :desc).page(params[:page])
-    else
-       @contacts = Contact.order(created_at: :desc).page(params[:page])
-    end
+      session[:selected_group_id] = params[:group_id]
+      @contacts = Contact.by_group(params[:group_id]).search(params[:term]).order(created_at: :desc).page(params[:page])
   end
+
+  def autocomplete
+      @contacts = Contact.search(params[:term]).order(created_at: :desc).page(params[:page])
+  end
+
 
   def new
     @contact = Contact.new
