@@ -1,11 +1,11 @@
 class ContactsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_contact, only: [:edit, :update, :destroy]
-  before_action :all_contacts, only: [:index, :create]
+  #before_action :all_contacts, only: [:index, :create]
 
   def index
       session[:selected_group_id] = params[:group_id]
-      
+      @contacts = all_contacts(params)
   end
 
   def autocomplete
@@ -25,7 +25,10 @@ class ContactsController < ApplicationController
                   flash[:success] = "Contact was successfully created."
                   redirect_to contacts_path(previous_query_string)
               end
-              format.js { render 'create', status: :created }
+              format.js do
+                @contacts = all_contacts(previous_query_string)
+                render 'create', status: :created
+              end
           else
               format.html do
                   flash[:error] = "Contact failed to be created."
@@ -67,11 +70,9 @@ class ContactsController < ApplicationController
       @contact = Contact.find(params[:id])
     end
 
-    def all_contacts
-      @contacts = current_user.contacts.by_group(params[:group_id]).search(params[:term]).order(created_at: :desc).page(params[:page])
+    def all_contacts(parameters)
+      current_user.contacts.by_group(parameters[:group_id]).search(parameters[:term]).order(created_at: :desc).page(parameters[:page])
     end
 
-    def previous_query_string
-      session[:selected_group_id] ? { group_id: session[:selected_group_id] } : {}
-    end
+    
 end
