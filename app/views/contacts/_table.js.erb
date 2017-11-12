@@ -1,0 +1,3 @@
+$('#contacts').html('<%= escape_javascript render(@contacts) %>');
+$('#paginator').html('<%= escape_javascript paginate(@contacts, remote: true) %>');
+$('#sidebar').html('<%= escape_javascript render("layouts/sidebar") %>');
