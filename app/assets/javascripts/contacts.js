@@ -1,13 +1,14 @@
 $( document ).on('turbolinks:load', function() {
     $("#add-new-group").hide();
-        $('#add-group-btn').click(function () {
+
+    $('body').on('click', '#add-group-btn', function () {
         $("#add-new-group").slideToggle(function() {
             $('#new_group').focus();
         });
         return false;
     });
 
-    $('#save-group-btn').click(function(event) {
+    $('body').on('click', '#save-group-btn', function(event) {
         event.preventDefault();
 
         var newGroup = $('#new_group');

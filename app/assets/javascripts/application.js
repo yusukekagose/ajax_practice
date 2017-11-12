@@ -32,4 +32,15 @@ $( document ).on('turbolinks:load', function() {
             $(this).closest('form').submit();
         }
     });
+    $('#form-modal-save-btn').click(function() {
+      $('#new_contact').submit();
+    });
+});
+
+$(document).on('click', '.pagination a[data-remote=true], a.list-group-item', function() {
+    history.pushState({}, '', $(this).attr('href'));
+});
+
+$(window).on('popstate', function() {
+    $.get(document.location.href);
 });
